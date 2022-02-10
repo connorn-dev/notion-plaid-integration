@@ -1,0 +1,20 @@
+{
+  "name": "notion-plaid-integration",
+  "version": "1.0.0",
+  "description": "plaid integration with notion to keep track of finances.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devStart": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@notionhq/client": "^0.4.13",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodeman": "^1.1.2"
+  }
+}
