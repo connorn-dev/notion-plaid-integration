@@ -1,9 +1,5 @@
-<!-- index.html – Links a sample bank account and renders balance information associated with the account. -->
-<html>
-  <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
-    <script>
+
+
       (async ($) => {
         // Grab a Link token to initialize Link
         const createLinkToken = async () => {
@@ -66,39 +62,3 @@
       };
 
       getStatus();
-    </script>
-  </head>
-  <title>Plaid | Minimal Quickstart</title>
-  <body>
-    <button
-      type="button"
-      id="link-account"
-      class="btn btn-primary btn-dark btn-lg"
-      style="
-        border: 1px solid black;
-        border-radius: 5px;
-        background: black;
-        height: 48px;
-        width: 155px;
-        margin-top: 5; 
-        margin-left: 10;
-        color: white;
-        font-size: 18px;
-      "
-    >
-      <strong>Link account</strong>
-    </button>
-    <pre
-      id="response"
-      style="
-        top: 60;
-        margin-left: 10;
-        bottom: 0;
-        position: fixed;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        font-size: 14px;
-      "
-    ></pre>
-  </body>
-</html>

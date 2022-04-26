@@ -9,14 +9,26 @@ const bodyParser = require("body-parser");
 const { Configuration, PlaidApi, PlaidEnvironments } = require("plaid");
 const path = require("path");
 const app = express();
+const session = require("express-session")
+const secret = require('./secret')
+
+secret.createSecretContainer(
+    "projects/1013762403522", 
+    "newSecret", 
+    "projects/1013762403522", Buffer.from('my super secret data', 'utf8'))
+
+
+
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(
+  session({ secret: "bosco", saveUninitialized: true, resave: true })
+);
 
-app.get("/", async (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
+app.listen(8080);
+app.use(express.static("public"));
 
 app.get("/oauth", async (req, res) => {
   res.sendFile(path.join(__dirname, "oauth.html"));
@@ -37,7 +49,7 @@ const config = new Configuration({
 //Instantiate the Plaid client with the configuration
 const client = new PlaidApi(config);
 
-//Creates a Link token and return it
+// Create Link Token
 app.get("/api/create_link_token", async (req, res, next) => {
   const tokenResponse = await client.linkTokenCreate({
     user: { client_user_id: req.sessionID },
@@ -50,7 +62,7 @@ app.get("/api/create_link_token", async (req, res, next) => {
   res.json(tokenResponse.data);
 });
 
-// Exchanges the public token from Plaid Link for an access token
+// Exchange public token for access token
 app.post("/api/exchange_public_token", async (req, res, next) => {
   const exchangeResponse = await client.itemPublicTokenExchange({
     public_token: req.body.public_token,
@@ -60,9 +72,10 @@ app.post("/api/exchange_public_token", async (req, res, next) => {
   // Store access_token in DB instead of session storage
   req.session.access_token = exchangeResponse.data.access_token;
   res.json(true);
+  console.log(exchangeResponse.data.access_token)
 });
 
-// Fetches balance data using the Node client library for Plaid
+// Fetch the balance data
 app.get("/api/data", async (req, res, next) => {
   const access_token = req.session.access_token;
   const balanceResponse = await client.accountsBalanceGet({ access_token });
@@ -71,10 +84,10 @@ app.get("/api/data", async (req, res, next) => {
   });
 });
 
-// Checks whether the user's account is connected, called
-// in index.html when redirected from oauth.html
+// Connected Acoount
+const connectedAccounts = 0; 
+// Account connection check, called when redirected to oauth.html
 app.get("/api/is_account_connected", async (req, res, next) => {
+    connectedAccounts++; 
   return (req.session.access_token ? res.json({ status: true }) : res.json({ status: false}));
 });
-
-app.listen(8080);
